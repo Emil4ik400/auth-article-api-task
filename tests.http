@@ -1,0 +1,73 @@
+### Переменные
+@baseUrl = http://localhost:3000
+@login = alex
+@pass = 123
+
+### 1. Регистрация пользователя
+POST {{baseUrl}}/api/user
+Content-Type: application/json
+
+{
+    "user_id": "u1",
+    "login": "{{login}}",
+    "password": "{{pass}}"
+}
+
+### 2. Аутентификация (Получаем токен)
+# @name auth
+POST {{baseUrl}}/api/authenticate
+Content-Type: application/json
+
+{
+    "login": "{{login}}",
+    "password": "{{pass}}"
+}
+
+### СОХРАНЯЕМ ТОКЕН ИЗ ОТВЕТА
+@authToken = {{auth.response.body.token}}
+
+### 3. Создание публичной статьи
+POST {{baseUrl}}/api/articles
+Content-Type: application/json
+authentication-header: {{authToken}}
+
+{
+    "title": "Public News",
+    "content": "This is free for everyone",
+    "visibility": "public"
+}
+
+### 4. Создание приватной статьи
+POST {{baseUrl}}/api/articles
+Content-Type: application/json
+authentication-header: {{authToken}}
+
+{
+    "title": "My Private Diary",
+    "content": "Secret information",
+    "visibility": "private"
+}
+
+### 5. Получение статей (Как авторизованный пользователь)
+# Вы должны увидеть и публичную, и приватную статью
+GET {{baseUrl}}/api/articles
+authentication-header: {{authToken}}
+
+### 6. Получение статей (Как аноним)
+# Вы должны увидеть ТОЛЬКО публичную статью
+GET {{baseUrl}}/api/articles
+
+### 7. Выход из системы
+POST {{baseUrl}}/api/logout
+authentication-header: {{authToken}}
+
+### 8. Проверка после логаута (Должно быть 401 при попытке создать статью)
+POST {{baseUrl}}/api/articles
+Content-Type: application/json
+authentication-header: {{authToken}}
+
+{
+    "title": "Should fail",
+    "content": "Fail",
+    "visibility": "public"
+}
