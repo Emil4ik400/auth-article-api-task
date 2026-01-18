@@ -147,4 +147,8 @@ app.delete("/api/articles/:id", (req: Request, res: Response) => {
   return res.sendStatus(204);
 });
 
+app.patch("/api/articles/:id", (req: Request, res: Response) => {
+  // implement here
+})
+
 app.listen(3000, () => console.log("SERVER READY ON PORT 3000"));
