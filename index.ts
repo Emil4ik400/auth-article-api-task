@@ -1,9 +1,13 @@
+import { swaggerSpec } from './src/swagger';
+import swaggerUi from 'swagger-ui-express';
 import express, { Request, Response } from "express";
 import { v4 as uuidv4 } from "uuid";
 
 const app = express();
 app.use(express.json());
 
+
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 type Visible = "public" | "private" | "logged_in";
 
@@ -26,11 +30,9 @@ type Article = {
   user_id: string;
 };
 
-
 const users = new Map<string, User>(); 
 const sessions = new Map<string, Session>(); 
 const articles: Article[] = [];
-
 
 function getToken(req: Request): string | undefined {
   const value = req.headers["authentication-header"];
@@ -38,11 +40,8 @@ function getToken(req: Request): string | undefined {
 }
 
 
-
-
 app.post("/api/user", (req: Request, res: Response) => {
   const { user_id, login, password } = req.body;
-  
   if (!user_id || !login || !password) return res.sendStatus(400);
   if (users.has(login)) return res.status(409).send("User already exists");
 
@@ -66,19 +65,11 @@ app.post("/api/authenticate", (req: Request, res: Response) => {
 
 
 app.post("/api/articles", (req: Request, res: Response) => {
- 
-  if (!req.body || typeof req.body !== 'object') return res.sendStatus(400);
-
   const { title, content, visibility } = req.body;
-
-  
   if (!title || !content || !visibility) return res.sendStatus(400);
-  if (!["public", "private", "logged_in"].includes(visibility)) return res.sendStatus(400);
-
   
   const token = getToken(req);
   const session = token ? sessions.get(token) : undefined;
-
   if (!session) return res.sendStatus(401); 
 
   const article: Article = {
@@ -93,26 +84,17 @@ app.post("/api/articles", (req: Request, res: Response) => {
   return res.status(201).json(article);
 });
 
-
 app.get("/api/articles", (req: Request, res: Response) => {
   const token = getToken(req);
   const session = token ? sessions.get(token) : undefined;
-
   const result = articles.filter((article) => {
-    
     if (article.visibility === "public") return true;
-    
-    
     if (article.visibility === "logged_in") return !!session;
-    console.log(article.user_id, session?.user_id);
-    
     if (article.visibility === "private") {
       return session && article.user_id === session.user_id;
     }
-
     return false;
   });
-
   return res.status(200).json(result);
 });
 
@@ -120,28 +102,20 @@ app.get("/api/articles", (req: Request, res: Response) => {
 app.post("/api/logout", (req: Request, res: Response) => {
   const token = getToken(req);
   if (!token || !sessions.has(token)) return res.sendStatus(401);
-
   sessions.delete(token);
   return res.sendStatus(200);
 });
 
+
 app.delete("/api/articles/:id", (req: Request, res: Response) => {
   const token = getToken(req);
   const session = token ? sessions.get(token) : undefined;
-
-  
   if (!session) return res.sendStatus(401);
 
   const articleId = req.params.id;
   const index = articles.findIndex(a => a.article_id === articleId);
-
-  
   if (index === -1) return res.sendStatus(404);
-
-  
-  if (articles[index].user_id !== session.user_id) {
-    return res.status(403).send("You are not the author");
-  }
+  if (articles[index].user_id !== session.user_id) return res.status(403).send("You are not the author");
 
   articles.splice(index, 1);
   return res.sendStatus(204);
