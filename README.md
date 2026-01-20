@@ -1,14 +1,48 @@
 # Auth & Article API Task
 
-A simple REST API built with **Node.js**, **Express**, and **TypeScript**.
+Full-stack application featuring a Node.js/Express backend and a React/TypeScript frontend. This project demonstrates API documentation with **Swagger** and UI component development with **Storybook**.
 
-## Features
-- **Authentication**: Stateful session management using UUIDs.
-- **Complexity**: $O(1)$ lookups for Users and Sessions using JavaScript `Map`.
-- **Security**: Visibility levels (Public, Logged_in, Private) with ownership checks.
-- **Fail-Fast**: Input validation before expensive operations.
+## 🛠 Features
 
-## How to Run
+- **Backend**: Express.js with TypeScript, JWT Authentication.
+- **API Documentation**: Interactive Swagger UI.
+- **Frontend**: Vite + React + TypeScript.
+- **UI Development**: Storybook for component isolation and documentation.
+- **Validation**: React Hook Form for efficient form handling.
+- **Fail-Fast**: Input validation before expensive operations.  
+
+---
+
+## 📸 Visual Documentation
+
+### Interactive API Docs (Swagger)
+![Swagger UI](./docs/swagger.png)
+*Access at: `http://localhost:3000/api-docs`*
+
+### Component Playground (Storybook)
+![Storybook UI](./docs/storybook.png)
+*Run with `npm run storybook` in the `/frontend` directory.*
+
+---
+
+
+## 🚀 Getting Started
+
+### 1. Clone and Install
+```bash
+git clone [https://github.com/Emil4ik400/auth-article-api-task.git](https://github.com/Emil4ik400/auth-article-api-task.git)
+cd auth-article-api-task
+npm install
+cd frontend && npm install
+
+## 🚀 How to Run
+
+### Backend
 1. `npm install`
 2. `npx ts-node index.ts`
-3. Use the `test.http` file to verify endpoints.
+*Use the `test.http` file or Swagger UI to verify endpoints.*
+
+### Frontend & Storybook
+1. `cd frontend`
+2. `npm install`
+3. `npm run storybook`
