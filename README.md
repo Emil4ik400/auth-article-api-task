@@ -16,13 +16,13 @@ Full-stack application featuring a Node.js/Express backend and a React/TypeScrip
 ## 📸 Visual Documentation
 
 ### Interactive API Docs (Swagger)
-![Swagger UI](./docs/swagger.png)
+![Swagger Dashboard](./docs/Swagger.png)
+![Swagger Endpoints](./docs/Swagger01.png)
 *Access at: `http://localhost:3000/api-docs`*
 
 ### Component Playground (Storybook)
-![Storybook UI](./docs/storybook.png)
+![Storybook UI](./docs/StorybookLoginForm.png)
 *Run with `npm run storybook` in the `/frontend` directory.*
-
 ---
 
 
